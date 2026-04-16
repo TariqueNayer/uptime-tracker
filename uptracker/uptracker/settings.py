@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # local
     'users.apps.UsersConfig',
+    #'monitors.apps.MonitorsConfig',
+
+    # third party.
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
