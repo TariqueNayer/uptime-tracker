@@ -25,22 +25,23 @@ class Monitor(models.Model):
 		default=HTTPStatus.OK,
 	)
 	check_interval_seconds = models.PositiveSmallIntegerField(default=60)
-	timeout_seconds = models.PositiveSmallIntegerField(default=30)
-	is_active = models.BooleanField()
+	timeout_seconds = models.PositiveSmallIntegerField(default=10)
+	is_active = models.BooleanField(default=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 
-class Check_results(models.Model):
+class CheckResult(models.Model):
 	monitor = models.ForeignKey(Monitor, on_delete=models.CASCADE)
 	checked_at = models.DateTimeField(default=timezone.now)
 	is_up = models.BooleanField()
 	status_code = models.PositiveSmallIntegerField(
 		choices=STATUS_CHOICES,
+		null=True, blank=True,
 	)
-	response_time_ms = models.PositiveSmallIntegerField()
-	error_message = models.CharField(max_length=200)
+	response_time_ms = models.PositiveSmallIntegerField(null=True, blank=True)
+	error_message = models.CharField(max_length=200, null=True, blank=True)
 
 class Incident(models.Model):
 	monitor = models.ForeignKey(Monitor, on_delete=models.CASCADE)
-	started_at = models.DateTimeField()
-	resolved_at = models.DateTimeField()
-	is_resolved = models.BooleanField()
+	started_at = models.DateTimeField(auto_now_add=True)
+	resolved_at = models.DateTimeField(null=True, blank=True)
+	is_resolved = models.BooleanField(default=False)

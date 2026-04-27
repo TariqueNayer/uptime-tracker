@@ -9,21 +9,24 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)9c4ko^z#8w)1u7o(#6bpi*^lh5u16-1dnd=a+2j*s@sudo!8f'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -37,11 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'django_celery_beat',
+
     # local
     'users.apps.UsersConfig',
-    #'monitors.apps.MonitorsConfig',
+    'monitors.apps.MonitorsConfig',
 
-    # third party.
     'rest_framework',
 ]
 
@@ -124,3 +129,23 @@ STATIC_URL = 'static/'
 
 #custom user
 AUTH_USER_MODEL = "users.CustomUser"
+
+# celer redis settings
+CELERY_BROKER_URL = os.environ.get('REDIS_URL')
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL')
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_TIMEZONE = 'UTC'
+
+CELERY_WORKER_POOL = 'threads'
+CELERY_WORKER_CONCURRENCY = 4
+
+# timeout
+CELERY_TASK_SOFT_TIME_LIMIT = 10
+CELERY_TASK_TIME_LIMIT = 15
+
+# django-celery-beat stores schedules in Postgres DB
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
