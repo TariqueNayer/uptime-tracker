@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-
+from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 from http import HTTPStatus
 
 
@@ -24,8 +25,8 @@ class Monitor(models.Model):
 		choices=STATUS_CHOICES,
 		default=HTTPStatus.OK,
 	)
-	check_interval_seconds = models.PositiveSmallIntegerField(default=60)
-	timeout_seconds = models.PositiveSmallIntegerField(default=10)
+	check_interval_seconds = models.PositiveSmallIntegerField(default=600, validators=[MinValueValidator(settings.MIN_CHECK_INTERVAL_SECONDS)])
+	timeout_seconds = models.PositiveSmallIntegerField(default=10, validators=[MinValueValidator(5), MaxValueValidator(30)])
 	is_active = models.BooleanField(default=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 
