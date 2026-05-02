@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -154,6 +156,15 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_RESULT_EXTENDED = True
 CELERY_TASK_RESULT_EXPIRES = 3600  # 1 hour
+
+
+
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-old-check-results': {
+        'task': 'monitors.tasks.cleanup_old_check_results',
+        'schedule': crontab(hour=2, minute=0),  # runs every day at 2:00 AM UTC
+    },
+}
 
 # monitors settings.
 MAX_ACTIVE_MONITORS_PER_USER = 3

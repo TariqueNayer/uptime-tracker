@@ -32,7 +32,7 @@ class Monitor(models.Model):
 
 class CheckResult(models.Model):
 	monitor = models.ForeignKey(Monitor, on_delete=models.CASCADE)
-	checked_at = models.DateTimeField(default=timezone.now)
+	checked_at = models.DateTimeField(default=timezone.now, db_index=True)
 	is_up = models.BooleanField()
 	status_code = models.PositiveSmallIntegerField(
 		choices=STATUS_CHOICES,
