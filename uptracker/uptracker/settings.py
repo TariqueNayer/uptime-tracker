@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -59,8 +60,8 @@ INSTALLED_APPS = [
 	'drf_spectacular',
 
 	'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+	'allauth.account',
+	'allauth.socialaccount',
 
 	'dj_rest_auth',
 	'dj_rest_auth.registration',
@@ -163,10 +164,10 @@ REST_FRAMEWORK = {
 
 # Dj-rest-auth
 REST_AUTH = {
-    'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'access_token',
-    'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
-    'JWT_AUTH_HTTPONLY': True,
+	'USE_JWT': True,
+	'JWT_AUTH_COOKIE': 'access_token',
+	'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
+	'JWT_AUTH_HTTPONLY': True,
 }
 
 #drf_simpleJWT
@@ -174,17 +175,19 @@ SIMPLE_JWT = {
 	'ACCESS_TOKEN_LIFETIME' : timedelta(minutes=60),
 	'REFRESH_TOKEN_LIFETIME' : timedelta(days=7),
 	'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'AUTH_COOKIE': 'access_token',
-    'AUTH_COOKIE_REFRESH': 'refresh_token',
-    'AUTH_COOKIE_SECURE': not DEBUG,   # True in production, False locally
-    'AUTH_COOKIE_HTTP_ONLY': True,
-    'AUTH_COOKIE_SAMESITE': 'Lax',
+	'BLACKLIST_AFTER_ROTATION': True,
+	'AUTH_COOKIE': 'access_token',
+	'AUTH_COOKIE_REFRESH': 'refresh_token',
+	'AUTH_COOKIE_SECURE': not DEBUG,   # True in production, False locally
+	'AUTH_COOKIE_HTTP_ONLY': True,
+	'AUTH_COOKIE_SAMESITE': 'Lax',
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Uptracker-API-Monitor',
+	'TITLE': 'Uptracker-API-Monitor',
 }
+
+
 
 # celer redis settings
 CELERY_BROKER_URL = os.environ.get('REDIS_URL')
