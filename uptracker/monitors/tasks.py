@@ -24,6 +24,8 @@ def ping_monitor(monitor_id):
 		timeout = httpx.Timeout(
 			connect=5.0,
 			read=monitor.timeout_seconds,
+			write=5.0, 
+			pool=5.0,
 		)
 		with httpx.Client() as client:
 			response = client.request(
