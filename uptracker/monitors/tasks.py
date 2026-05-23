@@ -2,6 +2,9 @@ import httpx
 from celery import shared_task
 from django.utils import timezone
 from datetime import timedelta
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
 from .models import CheckResult, Incident, Monitor
 
 @shared_task
@@ -49,7 +52,7 @@ def ping_monitor(monitor_id):
 		error_message = f"Request error: {str(e)}"
 
 	# ─── 3. save the CheckResult ─────────────────────────────────────
-	CheckResult.objects.create(
+	check_result = CheckResult.objects.create(
 		monitor=monitor,
 		checked_at=start_time,
 		is_up=is_up,
@@ -76,6 +79,23 @@ def ping_monitor(monitor_id):
 		open_incident.resolved_at = timezone.now()
 		open_incident.is_resolved = True
 		open_incident.save()
+
+# ─── 5. push to WebSocket ────────────────────────────────────────────
+	channel_layer = get_channel_layer()
+	async_to_sync(channel_layer.group_send)(
+		f'monitor_{monitor_id}',
+		{
+			'type': 'check_result',
+			'data': {
+				'monitor_id': monitor_id,
+				'checked_at': check_result.checked_at.isoformat(),
+				'is_up': check_result.is_up,
+				'status_code': check_result.status_code,
+				'response_time_ms': check_result.response_time_ms,
+				'error_message': check_result.error_message,
+			}
+		}
+	)
 
 # cleanup old task results.
 @shared_task

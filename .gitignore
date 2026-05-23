@@ -129,6 +129,6 @@ dmypy.json
 pypi-upload.sh
 
 #custom
-/staticfiles/
-/media/
+staticfiles/
+media/
 prod.env

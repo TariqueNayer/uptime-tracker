@@ -52,10 +52,13 @@ INSTALLED_APPS = [
 	'users.apps.UsersConfig',
 	'monitors.apps.MonitorsConfig',
 
+	# third party
 	'rest_framework',
 	'rest_framework_simplejwt',
 	'rest_framework_simplejwt.token_blacklist',
 	'rest_framework.authtoken',
+
+	'channels',
 
 	'drf_spectacular',
 
@@ -70,6 +73,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
 	'allauth.account.middleware.AccountMiddleware',
 	'django.middleware.security.SecurityMiddleware',
+	"whitenoise.middleware.WhiteNoiseMiddleware",
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
@@ -96,6 +100,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'uptracker.wsgi.application'
+ASGI_APPLICATION = 'uptracker.asgi.application'
 
 
 # Database
@@ -144,6 +149,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 #custom user
 AUTH_USER_MODEL = "users.CustomUser"
@@ -227,3 +241,13 @@ CELERY_BEAT_SCHEDULE = {
 # monitors settings.
 MAX_ACTIVE_MONITORS_PER_USER = 3
 MIN_CHECK_INTERVAL_SECONDS = (300 if not DEBUG else 20)
+
+# channels
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [os.environ.get('REDIS_URL')],
+        },
+    },
+}
