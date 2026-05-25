@@ -2,10 +2,14 @@ from rest_framework import viewsets, permissions, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
 from .models import Monitor, CheckResult, Incident
 from .serializers import MonitorSerializer, CheckResultSerializer, IncidentSerializer
 
-
+@extend_schema(parameters=[
+    OpenApiParameter('id', int, OpenApiParameter.PATH)
+])
 class MonitorViewSet(viewsets.ModelViewSet):
 	serializer_class = MonitorSerializer
 	permission_classes = [permissions.IsAuthenticated]
