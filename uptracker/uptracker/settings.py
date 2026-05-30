@@ -109,11 +109,11 @@ ASGI_APPLICATION = 'uptracker.asgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 if not DEBUG:
 	DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=False
-    )
+	'default': dj_database_url.config(
+		default=os.environ.get('DATABASE_URL'),
+		conn_max_age=600,
+		ssl_require=True,
+	)
 }
 else:
 	DATABASES = {
@@ -163,10 +163,10 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
+	# ...
+	"staticfiles": {
+		"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+	},
 }
 
 #custom user
@@ -208,11 +208,11 @@ SIMPLE_JWT = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Uptime Tracker API',
-    'DESCRIPTION': 'API Health Monitor and Uptime Tracker',
-    'VERSION': '1.0.0',
-    'COMPONENT_SPLIT_REQUEST': True,
-    'POSTPROCESSING_HOOKS': [],
+	'TITLE': 'Uptime Tracker API',
+	'DESCRIPTION': 'API Health Monitor and Uptime Tracker',
+	'VERSION': '1.0.0',
+	'COMPONENT_SPLIT_REQUEST': True,
+	'POSTPROCESSING_HOOKS': [],
 }
 
 
@@ -258,19 +258,27 @@ MIN_CHECK_INTERVAL_SECONDS = (300 if not DEBUG else 20)
 
 # channels
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [os.environ.get('REDIS_URL')],
-        },
-    },
+	'default': {
+		'BACKEND': 'channels_redis.core.RedisChannelLayer',
+		'CONFIG': {
+			'hosts': [os.environ.get('REDIS_URL')],
+		},
+	},
 }
 
 if not DEBUG:
-    # HTTPS settings — only active in production
-    SECURE_HSTS_SECONDS = 31536000          # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+	# HTTPS settings — only active in production
+	SECURE_HSTS_SECONDS = 31536000          # 1 year
+	SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+	SECURE_HSTS_PRELOAD = True
+	SECURE_SSL_REDIRECT = True
+	SESSION_COOKIE_SECURE = True
+	CSRF_COOKIE_SECURE = True
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.environ.get('REDIS_URL'),
+        'KEY_PREFIX': 'cache',
+    }
+}
