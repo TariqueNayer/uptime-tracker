@@ -24,6 +24,7 @@ dependencies = [
     "python-dotenv>=1.2.2",
     "redis>=7.4.0",
     "requests>=2.33.1",
+    "uuid6>=2025.0.1",
     "whitenoise>=6.12.0",
 ]
 

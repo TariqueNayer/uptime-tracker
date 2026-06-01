@@ -4,12 +4,13 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from http import HTTPStatus
-
+import uuid6
 
 User = get_user_model()
 STATUS_CHOICES = [(s.value, f"{s.value} {s.phrase}") for s in HTTPStatus]
 
 class Monitor(models.Model):
+	id = models.UUIDField(primary_key=True, default=uuid6.uuid7, editable=False)
 	owner = models.ForeignKey(User, on_delete=models.CASCADE)
 	name = models.CharField(max_length=200)
 	url = models.URLField()
@@ -31,6 +32,7 @@ class Monitor(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 
 class CheckResult(models.Model):
+	id = models.UUIDField(primary_key=True, default=uuid6.uuid7, editable=False)
 	monitor = models.ForeignKey(Monitor, on_delete=models.CASCADE)
 	checked_at = models.DateTimeField(default=timezone.now, db_index=True)
 	is_up = models.BooleanField()
@@ -42,6 +44,7 @@ class CheckResult(models.Model):
 	error_message = models.CharField(max_length=200, null=True, blank=True)
 
 class Incident(models.Model):
+	id = models.UUIDField(primary_key=True, default=uuid6.uuid7, editable=False)
 	monitor = models.ForeignKey(Monitor, on_delete=models.CASCADE)
 	started_at = models.DateTimeField(auto_now_add=True)
 	resolved_at = models.DateTimeField(null=True, blank=True)
