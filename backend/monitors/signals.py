@@ -19,7 +19,7 @@ def sync_periodic_task(sender, instance, created, **kwargs):
 			interval=schedule, 
 			name=f'monitor-{instance.id}',
 			task='monitors.tasks.ping_monitor',
-			args=json.dumps(str([instance.id])),
+			args=json.dumps([str(instance.id)]),
 		)
 
 	elif not created:
