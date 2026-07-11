@@ -209,7 +209,7 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
 	'TITLE': 'Uptime Tracker API',
-	'DESCRIPTION': 'API Health Monitor and Uptime Tracker',
+	'DESCRIPTION': 'Monitor API/website uptime with real-time WebSocket alerts on downtime.',
 	'VERSION': '1.0.0',
 	'COMPONENT_SPLIT_REQUEST': True,
 	'POSTPROCESSING_HOOKS': [],
